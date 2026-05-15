@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    restart: unless-stopped
+
+  bot:
+    build: .
+    container_name: uncensored_ai_bot
+    env_file:
+      - .env
+    depends_on:
+      - ollama
+    restart: unless-stopped
+    volumes:
+      - ./chat_logs.json:/app/chat_logs.json
+
+volumes:
+  ollama:
